@@ -7,6 +7,13 @@ It is very easy to create a Stateless Bean with EJB 3.0.  All bean types are hom
 create a Stateless bean is to create a bean class and have it implement at least one interface. Take a look at
 <literal>org.jboss.tutorial.stateless.bean.CalculatorBean</literal>
 
+      <programlisting>@Stateless
+public class CalculatorBean implements CalculatorRemote, CalculatorLocal {
+    public int add(int x, int y) {
+        return x + y;
+    }
+}</programlisting>
+
 	</para>
 
 	<para>
