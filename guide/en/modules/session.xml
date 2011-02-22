@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="Session_Beans">
+   <title>Creating an EJB 3 Session Bean</title>
+
+   <formalpara>
+      <title>Session Bean Class</title>
+      It is very easy to create a session bean with EJB 3. Any POJO can be
+      transformed into an EJB by annotating it. Since all bean types in EJB 3
+      are homeless the POJO does not need to implement any interfaces. Take
+      a look at <literal>org.jboss.tutorial.stateless.bean.CalculatorBean</literal>.
+      <programlisting>
+@Stateless
+public class CalculatorBean implements CalculatorRemote, CalculatorLocal {
+    public int add(int x, int y) {
+        return x + y;
+    }
+}</programlisting>
+   </formalpara>
+
+   <para>
+      The first thing to notice is that the class is tagged as
+      <literal>@Stateless</literal>. This marks the class as a stateless bean
+      and the EJB Container will deploy that class as a stateless bean
+      component.
+	</para>
+
+   <formalpara>
+      <title>Session Bean Types</title>
+      The EJB 3 specification defines three different session bean types.
+      <itemizedlist mark="bullet">
+         <listitem><simpara>Stateless Session</simpara></listitem>
+         <listitem><simpara>Stateful Session</simpara></listitem>
+         <listitem><simpara>Singleton</simpara></listitem>
+      </itemizedlist>
+      In case of a stateless session bean each invocation is assigned to a
+      random instance. On a stateful session bean each invocation is assigned
+      to the same instance, which contains the conversational state on behalf
+      of the session object's client. A single instance is available to handle
+      invocations when its designated as a Singleton.
+   </formalpara>
+
+	<formalpara>
+      <title>Session Bean Interfaces</title>
+      In this case the CalculatorBean also implements two interfaces. One is
+      the remote business interface of the EJB the other is the local business
+      interface. Should the bean implement no interfaces it is exposed with the
+      No-Interface view. The bean class itself will then serve as a local
+      business 'interface'.
+	</formalpara>
+
+	<para>
+      Take a look at
+      <literal>org.jboss.tutorial.stateless.bean.CalculatorRemote</literal>.
+
+      <programlisting>
+@Remote
+public interface CalculatorRemote extends Calculator {
+}</programlisting>
+
+      To define this as the remote business interface of Calculator bean you
+      either annotate the bean class and specify what the remote interfaces
+      are, or you annotate each remote business interface with
+      <literal>@javax.ejb.Remote</literal>.
+   </para>
+
+   <para>
+      Similar for <classname>org.jboss.tutorial.stateless.bean.CalculatorLocal</classname>
+      you need to annotate the class with <literal>@javax.ejb.Local</literal>
+      for it to be the local business interface of the CalculatorBean.
+	</para>
+
+	<formalpara>
+		<title>JNDI Bindings</title>
+      The Calculator bean will have four global JNDI bindings for the remote-
+      and local business interfaces.
+      By default, JBoss will use ejbName/local and ejbName/remote for the local and remote interfaces, respectively.
+      <itemizedlist mark="bullet">
+         <listitem><literal>java:global/stateless-tutorial/CalculatorBean!org.jboss.tutorial.stateless.bean.CalculatorLocal</literal></listitem>
+         <listitem><literal>java:global/stateless-tutorial/CalculatorBean!org.jboss.tutorial.stateless.bean.CalculatorRemote</literal></listitem>
+         <listitem><literal>java:global/stateless-tutorial/CalculatorBean!local</literal></listitem>
+         <listitem><literal>java:global/stateless-tutorial/CalculatorBean!remote</literal></listitem>
+      </itemizedlist>
+      <note><para>
+         The JNDI bindings <literal>!local</literal> and <literal>!remote</literal>
+         are JBoss specific. The object bound will implement all local or remote
+         business interfaces respectively.
+      </para></note>
+	</formalpara>
+
+	<formalpara>
+		<title>Client</title>
+      Open up <literal>org.jboss.tutorial.stateless.client.Client</literal>.
+      <programlisting>public class Client {
+    public static void main(String[] args) throws Exception {
+        InitialContext ctx = new InitialContext();
+        Calculator calculator = (Calculator) ctx.lookup("java:global/stateless-tutorial/CalculatorBean!remote");
+
+        System.out.println("1 + 1 = " + calculator.add(1, 1));
+    }
+}</programlisting>
+      The client obtains a reference to the stateless session bean by
+      looking up <literal>"java:global/stateless-tutorial/CalculatorBean!remote"</literal>.
+      Also notice that there is no home interface and you can begin executing
+      on the stateless session bean right away.
+	</formalpara>
+
+	<formalpara>
+		<title>Building and Running</title>
+
+		<note>
+			<para>
+To build and run the example, make sure you have installed JBoss 5.x.
+See the <xref linkend="JBossAS5">installation section</xref> for details.
+			</para>
+		</note>
+		<para>
+			From the command prompt, move to the "stateless" folder under the <xref linkend="EJB3_TUTORIAL_HOME">EJB3_TUTORIAL_HOME</xref>
+		</para>
+		<sect5>
+Ant Users:
+		</sect5>
+		<para>
+		Make sure your JBossAS-5.x is running
+		</para>
+	<programlisting>
+$ ant
+$ ant run
+
+	</programlisting>
+
+	<sect5>
+Maven Users: Make sure the AS is not running.
+	</sect5>
+
+	<programlisting>
+$ mvn clean install -PRunSingleTutorial
+	</programlisting>
+
+	</formalpara>
+</chapter>
+
+
