@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3CR3//EN" "../../../../docbook-support/support/docbook-dtd/docbookx.dtd" [
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+   "http://www.docbook.org/xml/4.3/docbookx.dtd" [
 <!ENTITY installing          SYSTEM "modules/installing.xml">
 <!ENTITY session           SYSTEM "modules/session.xml">
 <!ENTITY stateless          SYSTEM "modules/stateless.xml">
