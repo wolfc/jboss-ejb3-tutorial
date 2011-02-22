@@ -47,6 +47,13 @@
                      <!-- default is rather blank -->
                      <stylesheetResource>classpath:/xslt/org/jboss/xhtml.xsl</stylesheetResource>
                   </format>
+                  <format>
+                     <!-- default is master.pdf -->
+                     <finalName>${project.artifactId}.pdf</finalName>
+                     <formatName>pdf</formatName>
+                     <!-- default is rather blank -->
+                     <stylesheetResource>classpath:/xslt/org/jboss/pdf.xsl</stylesheetResource>
+                  </format>
                </formats>
                <options>
                   <!-- unable to build transformer [null] -->
