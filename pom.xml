@@ -42,6 +42,20 @@
          <version>${javax.ejb.version}</version>
          <scope>provided</scope>
       </dependency>
+
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>4.8.2</version>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.arquillian</groupId>
+         <artifactId>arquillian-junit</artifactId>
+         <version>1.0.0.Alpha4.SP1</version>
+         <scope>test</scope>
+      </dependency>
    </dependencies>
 
    <modules>
@@ -50,6 +64,31 @@
    </modules>
    
    <profiles>
+
+      <!-- http://docs.jboss.org/arquillian/reference/latest/en-US/html/gettingstarted.html -->
+      <profile>
+         <id>jbossas-remote-6</id>
+         <dependencies>
+            <dependency>
+               <groupId>org.jboss.arquillian.container</groupId>
+               <artifactId>arquillian-jbossas-remote-6</artifactId>
+               <version>1.0.0.Alpha4.SP1</version>
+               <scope>test</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.jboss.jbossas</groupId>
+               <artifactId>jboss-as-client</artifactId>
+               <version>6.0.0.Final</version>
+               <systemPath>${jboss.home}/client/jbossall-client.jar</systemPath>
+               <scope>system</scope>
+            </dependency>
+            <dependency>
+               <groupId>org.jboss.aspects</groupId>
+               <artifactId>jboss-security-aspects</artifactId>
+               <version>1.0.1</version>
+            </dependency>
+         </dependencies>
+      </profile>
 
       <profile>
          <id>RunAll</id>
@@ -168,5 +207,15 @@
       <javax.ejb.groupId>org.jboss.spec.javax.ejb</javax.ejb.groupId>
       <javax.ejb.artifactId>jboss-ejb-api_3.1_spec</javax.ejb.artifactId>
       <javax.ejb.version>1.0.0.Final</javax.ejb.version>
+
+      <!--  The jboss.home "intermediate" property would not have been necessary, if
+      Maven's enforcer plugin supported enforcing setting of a "System" environment variable.
+      Details here http://markmail.org/message/jwfmtrjesuyag7bh
+
+      This intermediate property is a workaround to use in the enforcer plugin to ensure that
+      the JBOSS_HOME is set. And now that we have an intermediate jboss.home, let's use this throughout
+      the pom instead of JBOSS_HOME.
+       -->
+      <jboss.home>${JBOSS_HOME}</jboss.home>
    </properties>
 </project>
