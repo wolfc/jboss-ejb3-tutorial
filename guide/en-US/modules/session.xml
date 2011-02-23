@@ -95,6 +95,30 @@ public interface CalculatorRemote extends Calculator {
    </section>
 
    <section>
+      <title>Testing your EJB</title>
+      Open up <literal>org.jboss.tutorial.stateless.test.CalculatorBeanTestCase</literal>.
+      <programlisting>@RunWith(Arquillian.class)
+public class CalculatorBeanTestCase {
+    @EJB
+    private CalculatorLocal calculator;
+
+    @Deployment
+    public static JavaArchive deployment() {
+        return ShrinkWrap.create(JavaArchive.class)
+                .addPackage(CalculatorBean.class.getPackage());
+    }
+
+    @Test
+    public void testAdd() {
+        assertEquals(2, calculator.add(1, 1));
+    }
+}</programlisting>
+      You can inject the bean into your Arquillian test case. Since there is
+      no home interface, the test can invoke upon the bean right away.
+   </section>
+
+<!--
+   <section>
       <title>Client</title>
       Open up <literal>org.jboss.tutorial.stateless.client.Client</literal>.
       <programlisting>public class Client {
@@ -140,6 +164,7 @@ $ ant run</programlisting>
          <programlisting>$ mvn clean install -PRunSingleTutorial</programlisting>
       </section>
    </section>
+-->
 </chapter>
 
 
