@@ -47,7 +47,7 @@
   <bookinfo>
     <title>JBoss EJB3 Tutorials</title>
     <subtitle>A guide for using EJB3 on JBoss</subtitle>
-    <releaseinfo>1.0</releaseinfo>
+    <releaseinfo>&version;</releaseinfo>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="Author_Group.xml"/>
   </bookinfo>
   <toc/>
