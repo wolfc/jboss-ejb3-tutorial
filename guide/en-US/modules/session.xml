@@ -134,19 +134,21 @@ public class CalculatorBeanTestCase {
       Also notice that there is no home interface and you can begin executing
       on the stateless session bean right away.
    </section>
+-->
 
    <section>
       <title>Building and Running</title>
 
       <note>
          <para>
-To build and run the example, make sure you have installed JBoss 5.x.
-See the <xref linkend="JBossAS5">installation section</xref> for details.
+To build and run the example, make sure you have installed JBoss 6.x.
+See the <xref linkend="JBossAS6">installation section</xref> for details.
          </para>
       </note>
       <para>
          From the command prompt, move to the "stateless" folder under the <xref linkend="EJB3_TUTORIAL_HOME">EJB3_TUTORIAL_HOME</xref>
       </para>
+      <!--
       <section>
          <title>Ant</title>
          <para>
@@ -155,16 +157,15 @@ See the <xref linkend="JBossAS5">installation section</xref> for details.
          <programlisting>$ ant
 $ ant run</programlisting>
       </section>
-
+      -->
       <section>
          <title>Maven</title>
          <para>
-            Make sure the Application Server is running.
+            Make sure the Application Server is running and execute the following command:
+            <programlisting>$ mvn -Pjbossas-remote-6 package</programlisting>
          </para>
-         <programlisting>$ mvn clean install -PRunSingleTutorial</programlisting>
       </section>
    </section>
--->
 </chapter>
 
 
