@@ -17,7 +17,7 @@
 		The following is the list of standard Activation Config Properties available from the JCA 1.5 specification.
 		Also listed are the respective types and default values where defined.
 		<informaltable frame='all'>
-			<tgroup cols='4' colsep="1" rowsep="1">
+			<tgroup cols="5" colsep="1" rowsep="1">
 				<colspec colwidth='0.5in'/>
 				<thead>
 					<row>
@@ -93,7 +93,7 @@
 		The following is the list of Activation Config Properties available as JBoss extensions.
 
 		<informaltable frame='all'>
-			<tgroup cols='4' colsep="1" rowsep="1">
+			<tgroup cols="5" colsep="1" rowsep="1">
 				<colspec colwidth='0.5in'/>
                 
 				<thead>
