@@ -26,21 +26,15 @@ import javax.ejb.MessageDriven;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 
-import org.jboss.ejb3.annotation.Depends;
-
-@MessageDriven(activationConfig =
-        {
-        @ActivationConfigProperty(propertyName="destinationType", propertyValue="javax.jms.Queue"),
-        @ActivationConfigProperty(propertyName="destination", propertyValue="queue/tutorial/example")
-        })
-@Depends ("jboss.mq.destination:service=Queue,name=tutorial")
-public class ExampleMDB implements MessageListener
-{
-   public void onMessage(Message recvMsg)
-   {
-      System.out.println("----------------");
-      System.out.println("Received message");
-      System.out.println("----------------");
-   }
-
+@MessageDriven(activationConfig = {
+        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
+        @ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/tutorial/example")
+})
+//@Depends("jboss.mq.destination:service=Queue,name=tutorial")
+public class ExampleMDB implements MessageListener {
+    public void onMessage(Message recvMsg) {
+        System.out.println("----------------");
+        System.out.println("Received message " + recvMsg);
+        System.out.println("----------------");
+    }
 }
