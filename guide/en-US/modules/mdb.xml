@@ -24,6 +24,17 @@ public class ExampleMDB implements MessageListener {
       <literal>destinationType</literal> and <literal>destination</literal>.
       These properties are passed to the JCA resource adapter to create
       the endpoint onto which messages are delivered.
+      <para>
+         Finally the class implements the applicable message listener interface. In this case
+         <literal>javax.jms.MessageListener</literal> for use with a JMS Resource Adapter.
+      </para>
+   </section>
+
+   <section>
+      <title>Resource Adapter</title>
+      By default the MDB uses the <literal>jms-ra.rar</literal> resource adapter. To use a different
+      resource adapter the bean can be annotated with <literal>org.jboss.ejb3.annotation.ResourceAdapter</literal>.
+      <programlisting>@ResourceAdapter("hornetq-ra.rar")</programlisting>
    </section>
 
    <section>
@@ -47,7 +58,8 @@ public class ExampleMDB implements MessageListener {
                <row>
                   <entry>destination</entry>
                   <entry>java.lang.String</entry>
-                  <entry>The jndi name of the Queue or Topic</entry>
+                  <entry>The logical name of the destination. Usually the JNDI name of the <literal>Queue</literal>
+                     or <literal>Topic</literal></entry>
                   <entry>Yes</entry>
                   <entry></entry>
                </row>
@@ -55,8 +67,9 @@ public class ExampleMDB implements MessageListener {
                <row>
                   <entry>destinationType</entry>
                   <entry>java.lang.String</entry>
-                  <entry>The type of destination valid values are javax.jms.Queue or javax.jms.Topic</entry>
-                  <entry>No</entry>
+                  <entry>The type of destination valid values are <literal>javax.jms.Queue</literal>
+                     or <literal>javax.jms.Topic</literal></entry>
+                  <entry>Yes</entry>
                   <entry></entry>
                </row>
 
@@ -71,9 +84,10 @@ public class ExampleMDB implements MessageListener {
                <row>
                   <entry>acknowledgeMode</entry>
                   <entry>int</entry>
-                  <entry>The type of acknowledgement when not using transacted jms - valid values AUTO_ACKNOWLEDGE or DUPS_OK_ACKNOWLEDGE</entry>
+                  <entry>The type of acknowledgement when not using transacted jms - valid values
+                     <literal>AUTO_ACKNOWLEDGE</literal> or <literal>DUPS_OK_ACKNOWLEDGE</literal></entry>
                   <entry>No</entry>
-                  <entry>AUTO_ACKNOWLEDGE</entry>
+                  <entry><literal>AUTO_ACKNOWLEDGE</literal></entry>
                </row>
 
                <row>
@@ -87,9 +101,10 @@ public class ExampleMDB implements MessageListener {
                <row>
                   <entry>subscriptionDurability</entry>
                   <entry>String</entry>
-                  <entry>Whether topic subscriptions are durable. Valid values are Durable or NonDurable</entry>
+                  <entry>Whether topic subscriptions are durable. Valid values are <literal>Durable</literal>
+                     or <literal>NonDurable</literal></entry>
                   <entry>No</entry>
-                  <entry>NonDurable</entry>
+                  <entry><literal>NonDurable</literal></entry>
                </row>
 
                <row>
@@ -99,20 +114,52 @@ public class ExampleMDB implements MessageListener {
                   <entry>No</entry>
                   <entry></entry>
                </row>
-
-
             </tbody>
          </tgroup>
       </informaltable>
    </section>
 
-   <caution><para>
-      Following section applies to AS 5, needs to be reworked.
-   </para></caution>
+   <section>
+      <title>Pooling and Sessions</title>
+      <para>
+         Most resource adapters allow configuration of the amount of sessions that should deliver messages
+         to the Message-Driven Bean. The MDB itself also allows a pool to be configured that manages the amount
+         of instances that will service the sessions.
+      </para>
+      <para>
+         For maximum concurrency it is advised that the <literal>ThreadlocalPool</literal> is used. But that
+         implementation depends on a Resource Adapter that in itself uses a pool of threads for servicing its
+         sessions. In that case the amount of MDB instances will remain lower or equal to the maximum amount
+         of configured sessions. Otherwise stick to using <literal>StrictMaxPool</literal> for governing the
+         amount of bean instances. The <literal>maxSize</literal> should be configured the same as the maximum
+         amount of sessions though.
+      </para>
+      <para>
+         The pool can be configured using <literal>@org.jboss.ejb3.annotation.Pool</literal>.
+      </para>
+      <caution>
+         <title>ThreadlocalPool or StrictMaxPool</title>
+         <para>
+            Only use ThreadlocalPool if the Resource Adapter does proper thread pooling.
+         </para>
+      </caution>
+   </section>
 
    <section>
-      <title>JBoss Specific Activation Properties</title>
-      The following is the list of Activation Config Properties available as JBoss extensions.
+      <title>Transactions</title>
+      <caution>
+         <title>Sending</title>
+         <para>
+            If within a transaction, do not send and wait for reply in any EJB.
+            The send will happen on commit!
+         </para>
+      </caution>
+   </section>
+   
+   <section>
+      <title>JBoss RA Specific Activation Properties</title>
+      The JBoss Resource Adapter is available in AS 4, 5 and 6.
+      The following is the list of Activation Config Properties available as JBoss RA extensions.
 
       <informaltable frame='all'>
          <tgroup cols="5" colsep="1" rowsep="1">
@@ -120,8 +167,8 @@ public class ExampleMDB implements MessageListener {
                 
             <thead>
                <row>
-                    <entry>Name</entry>
-                    <entry>Type</entry>
+                  <entry>Name</entry>
+                  <entry>Type</entry>
                   <entry>Remarks</entry>
                   <entry>Mandatory?</entry>
                   <entry>Default value</entry>
@@ -284,17 +331,15 @@ public class ExampleMDB implements MessageListener {
                   <entry>Default is the timeout set for the resource manager</entry>
                </row>
                     
-                    <row>
-                        <entry>DeliveryActive</entry>
-                        <entry>boolean</entry>
-                        <entry>Whether the MDB should make the subscription at initial deployment or wait for start() or stopDelivery()
-                        on the corresponding MBean. You can set this to false if you want to prevent messages from being delivered
-                        to the MDB (which is still starting) during server startup</entry>
-                        <entry>No</entry>
-                        <entry>true</entry>
-                    </row>
-                    
-
+               <row>
+                  <entry>DeliveryActive</entry>
+                  <entry>boolean</entry>
+                  <entry>Whether the MDB should make the subscription at initial deployment or wait for start() or stopDelivery()
+                  on the corresponding MBean. You can set this to false if you want to prevent messages from being delivered
+                  to the MDB (which is still starting) during server startup</entry>
+                  <entry>No</entry>
+                  <entry>true</entry>
+               </row>
             </tbody>
          </tgroup>
       </informaltable>
@@ -302,11 +347,21 @@ public class ExampleMDB implements MessageListener {
 
    <section>
       <title>Creating the JMS queue</title>
+      Depending on the JMS provider, choose the correct queue descriptor file.
+      <section>
+         <title>JBossMQ</title>
+         <para>
+            The <literal>queue-example-service.xml</literal> file defines the queues for this tutorial.
+         </para>
+      </section>
 
-      <caution><para>Applies to AS 5.</para></caution>
-      <para>
-         The <literal>queue-example-service.xml</literal> file defines the queues for this tutorial.
-      </para>
+      <section>
+         <title>HornetQ</title>
+         <para>
+            The <literal>tutorial-hornetq-jms.xml</literal> file contains queue definitions for HornetQ.
+            Copy this file to the deploy directory of JBoss AS to enable the queues.
+         </para>
+      </section>
    </section>
 
    <section>

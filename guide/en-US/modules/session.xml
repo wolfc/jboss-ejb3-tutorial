@@ -37,11 +37,11 @@ public class CalculatorBean implements CalculatorRemote, CalculatorLocal {
       to the same instance, which contains the conversational state on behalf
       of the session object's client. A single instance is available to handle
       invocations when its designated as a Singleton.
-      <warning><para>
+      <caution><para>
          The terms Stateless, Stateful and Singleton do not apply to the backing
          POJO of the EJB. The POJO always contains state regardless of how it
          plays in client session scenarios.
-      </para></warning>
+      </para></caution>
    </section>
 
    <section>

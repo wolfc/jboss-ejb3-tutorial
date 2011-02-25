@@ -46,7 +46,7 @@ public class ExampleMDBTestCase {
     public static JavaArchive deployment() {
         return ShrinkWrap.create(JavaArchive.class)
                 .addClass(ExampleMDB.class)
-                .addResource("hornetq-jms.xml");
+                .addManifestResource("tutorial-hornetq-jms.xml");
     }
 
     @Test
